@@ -1,6 +1,15 @@
 var express = require('express');
 var app = express();
 
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'example.com');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
 var products = [
 	{
 		product: 'Nature Made Vitamin C 1000mg, 300 Tablets',
@@ -43,6 +52,8 @@ var products = [
 		inventory: 60
 	}
 ];
+
+app.use(allowCrossDomain);
 
 app.get('/', function (req, res) {
   res.send('what do you want');
