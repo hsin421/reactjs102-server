@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 var path = require('path');
 var handleRender = require('./build/app.server.js');
 var fetchProducts = require('./fetchProducts.js');
+require('./server/models/products.js');
+var Product = mongoose.model('Product');
 
 // Find the appropriate database to connect to, default to localhost if not found.
 var connect = function() {
@@ -21,28 +23,57 @@ connect();
 mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
 
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+ // app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function (req, res) {
 	res.contentType = "text/html; charset=utf8";
-	fetchProducts(function(data) {
-		var html = handleRender(data.data);
-		res.end(html);
+	// fetchProducts(function(data) {
+	// 	var html = handleRender(data.data);
+	// 	res.end(html);
+	// })
+	Product.find({}, function(err, products) {
+		var html = handleRender(products);
+ 	  res.end(html);
 	})
+	// const html = `
+	// <!doctype html>
+	// <html lang="en">
+
+	// <head>
+	//   <meta charset="utf-8"/>
+	//   <title>My Universal App</title>
+	// </head>
+
+	// <div id="app">Hello hello</div>
+	// <img src="http://placekitten.com/201/401" />
+	// </body>
+	// </html>
+	// `
+	// res.end(html)
 	// const data = [ {id: 'asd', product: 'Cool stuff', price: 20}];
  //  var html = handleRender(data);
  //  res.end(html);
 });
 
+app.get('/addProduct/:productName', function(req, res) {
+	Product.create({product: req.params.productName, price: 20, image: 'http://placekitten.com/201/301'}, function(err) {
+		res.send('Done');
+	})
+});
 
-//CORS middleware
-// var allowCrossDomain = function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type');
+app.post('/addProductPost', function(req, res) {
+	console.log(req.body);
+	Product.create({product: req.body.product, price: req.body.price, image: req.body.image}, function(err, product) {
+		res.send(product);
+	})
+});
 
-//     next();
-// }
+
 
 // var products = [
 // 	{

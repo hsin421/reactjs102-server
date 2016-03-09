@@ -54,9 +54,7 @@ module.exports =
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
+	exports.__esModule = true;
 	exports['default'] = handleRender;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -71,19 +69,14 @@ module.exports =
 
 	var _baseHtmlJs = __webpack_require__(160);
 
-	var _fetchProducts = __webpack_require__(161);
-
-	var _AppJs = __webpack_require__(179);
+	var _AppJs = __webpack_require__(161);
 
 	var _AppJs2 = _interopRequireDefault(_AppJs);
 
 	function handleRender(data) {
 
-		// fetchProducts(
-		// 	data => res.status(400).send(renderFullPage(html, data))
-		// );
 		var html = _reactDomServer2['default'].renderToString(_react2['default'].createElement(_AppJs2['default'], { data: data }));
-		return (0, _baseHtmlJs.renderFullPage)(html, data);
+		return _baseHtmlJs.renderFullPage(html, data);
 	}
 
 	module.exports = exports['default'];
@@ -19695,9 +19688,7 @@ module.exports =
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
+	exports.__esModule = true;
 	exports.renderFullPage = renderFullPage;
 
 	function renderFullPage(html, initialState) {
@@ -19710,17 +19701,91 @@ module.exports =
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.fetchProducts = fetchProducts;
-	var axios = __webpack_require__(162);
+	exports.__esModule = true;
 
-	function fetchProducts(cb) {
-	  axios.get('https://reactjs102.herokuapp.com/products').then(function (res) {
-	    cb(res);
-	  });
-	}
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _axios = __webpack_require__(162);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	var App = (function (_React$Component) {
+		_inherits(App, _React$Component);
+
+		function App(props) {
+			var _this = this;
+
+			_classCallCheck(this, App);
+
+			_React$Component.call(this, props);
+
+			this.handleAddProduct = function (e) {
+				if (e.key === 'Enter') {
+					_this.handlePost();
+				}
+			};
+
+			this.handlePost = function () {
+				console.log('posting with ');
+				_axios2['default'].post('/addProductPost', {
+					product: 'random stuff',
+					price: 30,
+					image: 'http://placekitten.com/200/303'
+				}).then(function (res) {
+					//console.log(JSON.stringify(res));
+					_this.setState({
+						products: [].concat(_this.state.products, [res.data])
+					});
+				});
+			};
+
+			this.state = {
+				products: this.props.data
+			};
+		}
+
+		App.prototype.render = function render() {
+			var products = this.state.products;
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h1',
+					null,
+					'¡Universal App!'
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					products && products.map(function (product) {
+						return _react2['default'].createElement(
+							'li',
+							{ key: product.id || product._id },
+							_react2['default'].createElement('img', { src: product.image, width: '200' }),
+							product.product,
+							' $',
+							product.price
+						);
+					})
+				),
+				_react2['default'].createElement('input', { onKeyDown: this.handleAddProduct })
+			);
+		};
+
+		return App;
+	})(_react2['default'].Component);
+
+	exports['default'] = App;
+	module.exports = exports['default'];
 
 /***/ },
 /* 162 */
@@ -20812,77 +20877,6 @@ module.exports =
 	  };
 	};
 
-
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _fetchProducts = __webpack_require__(161);
-
-	var App = (function (_React$Component) {
-	  _inherits(App, _React$Component);
-
-	  function App() {
-	    _classCallCheck(this, App);
-
-	    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, arguments);
-	  }
-
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      var data = this.props.data;
-
-	      return _react2['default'].createElement(
-	        'div',
-	        null,
-	        _react2['default'].createElement(
-	          'h1',
-	          null,
-	          '¡Universal App!'
-	        ),
-	        _react2['default'].createElement(
-	          'ul',
-	          null,
-	          data && data.map(function (product) {
-	            return _react2['default'].createElement(
-	              'li',
-	              { key: product.id },
-	              product.product,
-	              ' $',
-	              product.price
-	            );
-	          })
-	        )
-	      );
-	    }
-	  }]);
-
-	  return App;
-	})(_react2['default'].Component);
-
-	exports['default'] = App;
-	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

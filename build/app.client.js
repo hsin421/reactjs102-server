@@ -19678,13 +19678,7 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	exports.__esModule = true;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -19696,48 +19690,75 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _fetchProducts = __webpack_require__(161);
+	var _axios = __webpack_require__(161);
+
+	var _axios2 = _interopRequireDefault(_axios);
 
 	var App = (function (_React$Component) {
-	  _inherits(App, _React$Component);
+		_inherits(App, _React$Component);
 
-	  function App() {
-	    _classCallCheck(this, App);
+		function App(props) {
+			var _this = this;
 
-	    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, arguments);
-	  }
+			_classCallCheck(this, App);
 
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      var data = this.props.data;
+			_React$Component.call(this, props);
 
-	      return _react2['default'].createElement(
-	        'div',
-	        null,
-	        _react2['default'].createElement(
-	          'h1',
-	          null,
-	          '¡Universal App!'
-	        ),
-	        _react2['default'].createElement(
-	          'ul',
-	          null,
-	          data && data.map(function (product) {
-	            return _react2['default'].createElement(
-	              'li',
-	              { key: product.id },
-	              product.product,
-	              ' $',
-	              product.price
-	            );
-	          })
-	        )
-	      );
-	    }
-	  }]);
+			this.handleAddProduct = function (e) {
+				if (e.key === 'Enter') {
+					_this.handlePost();
+				}
+			};
 
-	  return App;
+			this.handlePost = function () {
+				console.log('posting with ');
+				_axios2['default'].post('/addProductPost', {
+					product: 'random stuff',
+					price: 30,
+					image: 'http://placekitten.com/200/303'
+				}).then(function (res) {
+					//console.log(JSON.stringify(res));
+					_this.setState({
+						products: [].concat(_this.state.products, [res.data])
+					});
+				});
+			};
+
+			this.state = {
+				products: this.props.data
+			};
+		}
+
+		App.prototype.render = function render() {
+			var products = this.state.products;
+
+			return _react2['default'].createElement(
+				'div',
+				null,
+				_react2['default'].createElement(
+					'h1',
+					null,
+					'¡Universal App!'
+				),
+				_react2['default'].createElement(
+					'ul',
+					null,
+					products && products.map(function (product) {
+						return _react2['default'].createElement(
+							'li',
+							{ key: product.id || product._id },
+							_react2['default'].createElement('img', { src: product.image, width: '200' }),
+							product.product,
+							' $',
+							product.price
+						);
+					})
+				),
+				_react2['default'].createElement('input', { onKeyDown: this.handleAddProduct })
+			);
+		};
+
+		return App;
 	})(_react2['default'].Component);
 
 	exports['default'] = App;
@@ -19747,40 +19768,22 @@
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.fetchProducts = fetchProducts;
-	var axios = __webpack_require__(162);
-
-	function fetchProducts(cb) {
-	  axios.get('https://reactjs102.herokuapp.com/products').then(function (res) {
-	    cb(res);
-	  });
-	}
+	module.exports = __webpack_require__(162);
 
 /***/ },
 /* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(163);
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
-	var defaults = __webpack_require__(164);
-	var utils = __webpack_require__(165);
-	var dispatchRequest = __webpack_require__(166);
-	var InterceptorManager = __webpack_require__(174);
-	var isAbsoluteURL = __webpack_require__(175);
-	var combineURLs = __webpack_require__(176);
-	var bind = __webpack_require__(177);
-	var transformData = __webpack_require__(170);
+	var defaults = __webpack_require__(163);
+	var utils = __webpack_require__(164);
+	var dispatchRequest = __webpack_require__(165);
+	var InterceptorManager = __webpack_require__(173);
+	var isAbsoluteURL = __webpack_require__(174);
+	var combineURLs = __webpack_require__(175);
+	var bind = __webpack_require__(176);
+	var transformData = __webpack_require__(169);
 
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -19863,7 +19866,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(178);
+	axios.spread = __webpack_require__(177);
 
 	// Expose interceptors
 	axios.interceptors = defaultInstance.interceptors;
@@ -19894,12 +19897,12 @@
 
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -19963,7 +19966,7 @@
 
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20213,7 +20216,7 @@
 
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -20235,10 +20238,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(167);
+	        adapter = __webpack_require__(166);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(167);
+	        adapter = __webpack_require__(166);
 	      }
 
 	      if (typeof adapter === 'function') {
@@ -20254,17 +20257,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 167 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
-	var buildURL = __webpack_require__(168);
-	var parseHeaders = __webpack_require__(169);
-	var transformData = __webpack_require__(170);
-	var isURLSameOrigin = __webpack_require__(171);
-	var btoa = window.btoa || __webpack_require__(172);
+	var utils = __webpack_require__(164);
+	var buildURL = __webpack_require__(167);
+	var parseHeaders = __webpack_require__(168);
+	var transformData = __webpack_require__(169);
+	var isURLSameOrigin = __webpack_require__(170);
+	var btoa = window.btoa || __webpack_require__(171);
 
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -20339,7 +20342,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(173);
+	    var cookies = __webpack_require__(172);
 
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ?
@@ -20390,12 +20393,12 @@
 
 
 /***/ },
-/* 168 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -20463,12 +20466,12 @@
 
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	/**
 	 * Parse headers into an object
@@ -20506,12 +20509,12 @@
 
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	/**
 	 * Transform the data for a request or a response
@@ -20532,12 +20535,12 @@
 
 
 /***/ },
-/* 171 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -20606,7 +20609,7 @@
 
 
 /***/ },
-/* 172 */
+/* 171 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20648,12 +20651,12 @@
 
 
 /***/ },
-/* 173 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -20707,12 +20710,12 @@
 
 
 /***/ },
-/* 174 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(165);
+	var utils = __webpack_require__(164);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -20765,7 +20768,7 @@
 
 
 /***/ },
-/* 175 */
+/* 174 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20785,7 +20788,7 @@
 
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20803,7 +20806,7 @@
 
 
 /***/ },
-/* 177 */
+/* 176 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20820,7 +20823,7 @@
 
 
 /***/ },
-/* 178 */
+/* 177 */
 /***/ function(module, exports) {
 
 	'use strict';
